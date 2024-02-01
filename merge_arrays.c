@@ -5,7 +5,7 @@
 #include <math.h>
 
 #define ARRAY_SIZE 10 // Adjust the size of the array as needed
-#define RANDOM_NUMBER_MAX_SIZE ARRAY_SIZE * 100
+#define RANDOM_NUMBER_MAX_SIZE ARRAY_SIZE * 100 // Max random number size that is put in the arrays
 
 void generateArray(int *array, int start, int end, int arraySize){
 
@@ -83,7 +83,6 @@ void printArray(int *array, int size, int rank) {
     printf("]\n");
 }
 
-
 void addArrayToEndOfArray(int *array1, int arraySize1, int *array2, int arraySize2, int rank, int num_processes){
     int start, end;
 
@@ -112,7 +111,6 @@ int main(int argc, char *argv[]) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
 
     // Returns the precision of the results returned by MPI_Wtime
     tick = MPI_Wtick();
