@@ -138,6 +138,7 @@ int main(int argc, char *argv[]) {
 
     end_time = MPI_Wtime(); 
 
+    // if rank is 0, collect all data from all other processes
     if (rank == 0) {
 
         // Array to store received arrays
@@ -169,10 +170,10 @@ int main(int argc, char *argv[]) {
         // Add array from rank 0 to the end the of the array
         addArrayToEndOfArray(g_sortedIntegerArray2, (ARRAY_SIZE * size), sortedRandomIntegerArray2, ARRAY_SIZE, rank, size);
 
-        printf("********* Global Sorted Array 1 *********\n");
+        printf("********** Global Sorted Array 1 **********\n");
         printArray(g_sortedIntegerArray1, ARRAY_SIZE * size, rank);
 
-        printf("********* Global Sorted Array 2 *********\n");
+        printf("********** Global Sorted Array 2 **********\n");
         printArray(g_sortedIntegerArray2, ARRAY_SIZE * size, rank);
 
     } else {
@@ -186,7 +187,33 @@ int main(int argc, char *argv[]) {
     // Calculate the elapsed time
     elapsed_time = end_time - start_time;
 
+    // if rank is 0, print out the time analysis
     if (rank == 0) {
+        printf("********** Array Creation Time **********")
+        printf("Total processes: %d\n", size);
+        printf("Total computation time: %e seconds\n", elapsed_time);
+        printf("Computation time per process: %e seconds\n", elapsed_time / size);
+        printf("Resolution of MPI_Wtime: %e seconds\n", tick);
+    }
+
+    // Ensures all processes will enter the measured section of the code at the same time
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    start_time = MPI_Wtime();
+
+    // MERGE ARRAYS
+
+    // Ensures all processes will enter the measured section of the code at the same time
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    end_time = MPI_Wtime();
+
+    // Calculate the elapsed time
+    elapsed_time = end_time - start_time;
+
+    // if rank is 0, print out the time analysis
+    if (rank == 0) {
+        printf("********** Array Merge Time **********")
         printf("Total processes: %d\n", size);
         printf("Total computation time: %e seconds\n", elapsed_time);
         printf("Computation time per process: %e seconds\n", elapsed_time / size);
