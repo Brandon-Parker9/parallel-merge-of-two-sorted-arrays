@@ -116,9 +116,9 @@ void calculateRangeBasedOnArray(int *array1, int *array2, int arraySize2, int ar
         // Set the lower value to one index less to account for values that could be between
         int lower_value = array1[(array1_start_range - 1)];  
 
-        // Find the leftmost index with value greater than or equal to lower_value
+        // Find the leftmost index with value greater than lower_value
         for (int i = 0; i < arraySize2; i++) {
-            if (array2[i] >= lower_value) {
+            if (array2[i] > lower_value) {
                 start = i;
                 break;
             }
