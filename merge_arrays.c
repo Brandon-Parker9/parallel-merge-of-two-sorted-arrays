@@ -177,22 +177,24 @@ int main(int argc, char *argv[]) {
     // Seed the random number generator once to ensure randomness
     srand(time(NULL));
 
+    // initialize random sorted array and their lengths
     int n_online_random_array1[] = {69, 179, 227, 249, 254, 398, 556, 570, 619, 776, 789, 813, 862, 927, 988, 998, 1044, 1197, 1657, 1699, 1820, 1973, 1974, 2044, 2051, 2163, 2392, 2398, 2580, 2621, 2751, 2755, 2955, 3125, 3199, 3272, 3303, 3490, 3540, 3551, 3606, 3616, 4021, 4066, 4206, 4214, 4252, 4380, 4624, 4751, 4788, 5004, 5078, 5114, 5459, 5593, 5839, 5930, 5992, 5994, 6005, 6011, 6063, 6127, 6151, 6165, 6298, 6317, 6411, 6553, 6599, 6630, 6779, 7455, 7521, 7571, 7652, 7704, 7776, 7868, 7869, 8322, 8454, 8475, 8507, 8530, 8538, 8546, 8608, 8711, 8824, 8910, 8941, 9107, 9195, 9206, 9404, 9504, 9505, 9723};
     int n_online_random_array2[] = {32, 59, 120, 166, 358, 491, 539, 774, 787, 914, 943, 1108, 1222, 1234, 1249, 1305, 1309, 1344, 1526, 1575, 1772, 1940, 1964, 2185, 2197, 2322, 2411, 2412, 2486, 2625, 2965, 2972, 3124, 3126, 3192, 3355, 3391, 3534, 3616, 3632, 3683, 3788, 3849, 3989, 4026, 4111, 4174, 4413, 4513, 4752, 4756, 4795, 4919, 4946, 4989, 5125, 5493, 5541, 5659, 5725, 5754, 5778, 5833, 5837, 5864, 5876, 5987, 6024, 6290, 6313, 6340, 6534, 6572, 6587, 6702, 6759, 6808, 6822, 6840, 7289, 7451, 7527, 7697, 7735, 7831, 7931, 7933, 7967, 8004, 8045, 8113, 8237, 8494, 8516, 8606, 8664, 9020, 9628, 9635, 9851};
     int *online_random_array1 = n_online_random_array1;
     int *online_random_array2 = n_online_random_array2;
-
     int size_online_random_array1 = 100;
     int size_online_random_array2 = 100;
 
-    int rank, size;
-    double start_time, end_time, elapsed_time, tick;
+    // initialize random sorted array that will be generated locally
     int *g_sortedIntegerArray1;
     int *g_sortedIntegerArray2;
 
-    // Define variables to hold the size of the global arrays and set their value
+    // Define variables to hold the size of the locally generate arrays
     int size_g_sortedIntegerArray1;
     int size_g_sortedIntegerArray2;
+
+    int rank, size;
+    double start_time, end_time, elapsed_time, tick;
         
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -207,6 +209,8 @@ int main(int argc, char *argv[]) {
     start_time = MPI_Wtime();
 
     int start_range, end_range;
+
+    // LOCALLY GENERATE RANDOM SORTED INTEGER ARRAYS
 
     // Calculate the range of elements for the current process
     calculateRangeBasedOnRankAndSize(RANDOM_NUMBER_MAX_SIZE, size, rank, &start_range, &end_range);
@@ -361,19 +365,23 @@ int main(int argc, char *argv[]) {
     // if rank is 0, collect all merged arrays from all other processes
     if (rank == 0) {
 
-        // Calculate the size of the global arrays
+        // initialize final sorted array
         int *final_sortedIntegerArray;
 
+        // Calculate the size of the final sorted array 
         int size_final_sortedIntegerArray = (size_g_sortedIntegerArray1 + size_g_sortedIntegerArray2);
 
         // Allocate memory for global sorted array
         final_sortedIntegerArray = (int *)malloc(size_final_sortedIntegerArray * sizeof(int));
 
+        // initialize variables to receive data from other proccess
         int *receivedMergedArray;
         int receivedMergedArraySize;
+
+        // variable to help with inserting into final sorted array
         int finalArrayCurrPostion = 0;
 
-        // Receive arrays from all processes except for rank 0
+        // Receive arrays from all processes except for rank 0 from largest to smallest
         for (int source = size - 1; source > 0; source--) {
             
             // receive merged array size
@@ -423,7 +431,7 @@ int main(int argc, char *argv[]) {
     // Ensures all processes will enter the measured section of the code at the same time
     MPI_Barrier(MPI_COMM_WORLD);
 
-    // if rank is 0, print out the time analysis
+    // if rank is 0, print out the time analysis for merging arrays
     if (rank == 0) {
         printf("\n********** Array Merge Time **********\n");
         printf("Total processes: %d\n", size);
