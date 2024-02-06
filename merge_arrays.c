@@ -266,9 +266,11 @@ int main(int argc, char *argv[]) {
         // Add array from rank 0 to the end the of the array
         addArrayToEndOfArray(g_sortedIntegerArray2, size_g_sortedIntegerArray2, sortedRandomIntegerArray2, ARRAY_SIZE, rank, size);
 
+        // Testing purposes only
         printf("********** Global Sorted Array 1 **********\n");
         printArray(g_sortedIntegerArray1, size_g_sortedIntegerArray1, rank);
 
+        // Testing purposes only
         printf("********** Global Sorted Array 2 **********\n");
         printArray(g_sortedIntegerArray2, size_g_sortedIntegerArray2, rank);
 
@@ -295,7 +297,7 @@ int main(int argc, char *argv[]) {
     // Calculate the elapsed time
     elapsed_time = end_time - start_time;
 
-    // if rank is 0, print out the time analysis
+    // if rank is 0, print out the time analysis of array creation
     if (rank == 0) {
         printf("\n********** Array Creation Time **********\n");
         // printf("Size of arrays to be merged: %d\n", (ARRAY_SIZE * size));
@@ -315,6 +317,7 @@ int main(int argc, char *argv[]) {
 
     // MERGE ARRAYS
 
+    // initialize variables to hold start and end of each array that each process will work on
     int array1_start_range, array1_end_range, array2_start_range, array2_end_range;
     
     // ########## Testing with locally generated array ##########
@@ -325,6 +328,7 @@ int main(int argc, char *argv[]) {
     // // Calculate the range of elements for array 2 in the current process
     // calculateRangeBasedOnArray(g_sortedIntegerArray1, g_sortedIntegerArray2, size_g_sortedIntegerArray2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
 
+    // Testing purposes only
     // printf("\nLocal:\nRank: %d Array 1 Start: %d Array 1 Start Value: %d Array 1 End: %d Array 1 End Value: %d\nRank: %d Array 2 Start: %d Array 2 Start Value: %d Array 2 End: %d Array 2 End Value: %d\n", rank, array1_start_range, g_sortedIntegerArray1[array1_start_range], array1_end_range, g_sortedIntegerArray1[array1_end_range], rank, array2_start_range, g_sortedIntegerArray2[array2_start_range], array2_end_range, g_sortedIntegerArray2[array2_end_range]);
 
     // // Flush all print statements before next section of code
@@ -345,6 +349,7 @@ int main(int argc, char *argv[]) {
     // Calculate the range of elements for array 2 in the current process
     calculateRangeBasedOnArray(online_random_array1, online_random_array2, size_online_random_array2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
 
+    // Testing purposes only
     // printf("\nOnline:\nRank: %d Array 1 Start: %d Array 1 Start Value: %d Array 1 End: %d Array 1 End Value: %d\nRank: %d Array 2 Start: %d Array 2 Start Value: %d Array 2 End: %d Array 2 End Value: %d\n", rank, array1_start_range, online_random_array1[array1_start_range], array1_end_range, online_random_array1[array1_end_range], rank, array2_start_range, online_random_array2[array2_start_range], array2_end_range, online_random_array2[array2_end_range]);
 
     // Flush all print statements before next section of code
@@ -393,6 +398,7 @@ int main(int argc, char *argv[]) {
             // receive merged array
             MPI_Recv(receivedMergedArray, receivedMergedArraySize, MPI_INT, source, 1, MPI_COMM_WORLD, &status);
 
+            // Testing purposes only
             printf("receivedMergedArraySize: %d\n", receivedMergedArraySize);
             printArray(receivedMergedArray, receivedMergedArraySize, source);
             
