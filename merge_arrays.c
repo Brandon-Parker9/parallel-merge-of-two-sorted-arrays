@@ -139,7 +139,36 @@ void calculateRangeBasedOnArray(int *array1, int *array2, int arraySize2, int ar
     *array2_end_range = end;
 }
 
-void mergeTwoSortedArrays(int *sortedArray1, int sizeSortedArray1, int *sortedArray2, int sizeSortedArray2, int *mergedArray){
+void mergeTwoSortedArrays(int *sortedArray1, int *sortedArray2, int array1_start_range, int array1_end_range, int array2_start_range, int array2_end_range, int *mergedArray){
+        
+    int i = array1_start_range, j = array2_start_range, k = 0;
+
+    // Merge elements from sortedArray1 and sortedArray2 into mergedArray
+    while (i <= array1_end_range && j <= array2_end_range) {
+        if (sortedArray1[i] <= sortedArray2[j]) {
+            mergedArray[k] = sortedArray1[i];
+            k++;
+            i++;
+        } else {
+            mergedArray[k] = sortedArray2[j];
+            k++;
+            j++;
+        }
+    }
+
+    // Copy the remaining elements of sortedArray1, if any
+    while (i <= array1_end_range) {
+        mergedArray[k] = sortedArray1[i];
+        k++;
+        i++;
+    }
+
+    // Copy the remaining elements of sortedArray2, if any
+    while (j <= array2_end_range) {
+        mergedArray[k] = sortedArray2[j];
+        k++;
+        j++;
+    }
 
 }
 
@@ -284,10 +313,6 @@ int main(int argc, char *argv[]) {
 
     int array1_start_range, array1_end_range, array2_start_range, array2_end_range;
     int *merged_array;
-    int size_merged_array = (array1_end_range - array1_start_range) + (array2_end_range - array2_start_range);
-    
-    // Allocate memory for merged array
-    merged_array = (int *)malloc(size_merged_array * sizeof(int));
 
     // ########## Testing with locally generated array ##########
 
@@ -319,26 +344,61 @@ int main(int argc, char *argv[]) {
 
     printf("\nOnline:\nRank: %d Array 1 Start: %d Array 1 Start Value: %d Array 1 End: %d Array 1 End Value: %d\nRank: %d Array 2 Start: %d Array 2 Start Value: %d Array 2 End: %d Array 2 End Value: %d\n", rank, array1_start_range, online_random_array1[array1_start_range], array1_end_range, online_random_array1[array1_end_range], rank, array2_start_range, online_random_array2[array2_start_range], array2_end_range, online_random_array2[array2_end_range]);
 
+    // Flush all print statements before next section of code
+    fflush(stdout);
+
+    int size_merged_array = (array1_end_range - array1_start_range) + (array2_end_range - array2_start_range) + 2;
+
+    // Allocate memory for merged array
+    merged_array = (int *)malloc(size_merged_array * sizeof(int));
+
     // Merge the two arrays together
-    mergeTwoSortedArrays(online_random_array1, size_online_random_array1, online_random_array2, size_online_random_array2, merged_array);
+    // mergeTwoSortedArrays(online_random_array1, online_random_array2, array1_start_range, array1_end_range, array2_start_range, array2_end_range, merged_array);
 
     // ########## Testing with random online array ##########
 
 
     // if rank is 0, collect all merged arrays from all other processes
     if (rank == 0) {
-        
+
+        // Calculate the size of the global arrays
+        int *final_sortedIntegerArray;
+
+        int size_final_sortedIntegerArray = (size_g_sortedIntegerArray1 + size_g_sortedIntegerArray2);
+
+        // Allocate memory for global sorted array
+        final_sortedIntegerArray = (int *)malloc(size_final_sortedIntegerArray * sizeof(int));
+
+        int receivedMergedArrays[size][size_merged_array];
+        int receivedData;
+        int finalArrayCurrPostion = 0;
+
         // Receive arrays from all processes except for rank 0
         for (int source = size - 1; source > 0; source--) {
+            
+            // receive merged array
+            MPI_Recv(receivedMergedArrays[source], size_merged_array, MPI_INT, source, 1, MPI_COMM_WORLD, &status);
+            
+            // receive merged array size
+            MPI_Recv(&receivedData, 1, MPI_INT, source, 2, MPI_COMM_WORLD, &status);
 
-
+            // Add array to end of array bases on size and finalArrayCurrPostion
+        
         }
 
+        // Add array from rank 0 to end of array bases on size and finalArrayCurrPostion
+        
+
+        printf("********** Final Sorted Array 1 **********\n");
+        printArray(final_sortedIntegerArray, size_final_sortedIntegerArray, rank);
     
     } else {
     
         // Send merged array to process 0
-        
+        MPI_Send(merged_array, size_merged_array, MPI_INT, 0, 1, MPI_COMM_WORLD);
+
+        // Send merged array size to process 0
+        MPI_Send(&size_merged_array, 1, MPI_INT, 0, 2, MPI_COMM_WORLD);
 
     }
 
