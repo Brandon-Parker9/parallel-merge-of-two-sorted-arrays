@@ -318,29 +318,11 @@ int main(int argc, char *argv[]) {
 
     // ########## Testing with locally generated array ##########
 
-    // // Calculate the range of elements for array 1 in the current process
-    // calculateRangeBasedOnRankAndSize(size_g_sortedIntegerArray1, size, rank, &array1_start_range, &array1_end_range);
-
-    // // Calculate the range of elements for array 2 in the current process
-    // calculateRangeBasedOnArray(g_sortedIntegerArray1, g_sortedIntegerArray2, size_g_sortedIntegerArray2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
-
-    // // Flush all print statements before next section of code
-    // fflush(stdout);
-
-    // // Merge the two arrays together
-    // mergeTwoSortedArrays(g_sortedIntegerArray1, size_g_sortedIntegerArray1, g_sortedIntegerArray2, size_g_sortedIntegerArray2, merged_array);
-
-    // ########## Testing with locally generated array ##########
-
-
-
-    // ########## Testing with random online array ##########
-
     // Calculate the range of elements for array 1 in the current process
-    calculateRangeBasedOnRankAndSize(size_online_random_array1, size, rank, &array1_start_range, &array1_end_range);
+    calculateRangeBasedOnRankAndSize(size_g_sortedIntegerArray1, size, rank, &array1_start_range, &array1_end_range);
 
     // Calculate the range of elements for array 2 in the current process
-    calculateRangeBasedOnArray(online_random_array1, online_random_array2, size_online_random_array2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
+    calculateRangeBasedOnArray(g_sortedIntegerArray1, g_sortedIntegerArray2, size_g_sortedIntegerArray2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
 
     // Flush all print statements before next section of code
     fflush(stdout);
@@ -352,7 +334,31 @@ int main(int argc, char *argv[]) {
     merged_array = (int *)malloc(size_merged_array * sizeof(int));
 
     // Merge the two arrays together
-    mergeTwoSortedArrays(online_random_array1, online_random_array2, array1_start_range, array1_end_range, array2_start_range, array2_end_range, merged_array);
+    mergeTwoSortedArrays(g_sortedIntegerArray1, g_sortedIntegerArray2, array1_start_range, array1_end_range, array2_start_range, array2_end_range, merged_array);
+
+    // ########## Testing with locally generated array ##########
+
+
+
+    // ########## Testing with random online array ##########
+
+    // // Calculate the range of elements for array 1 in the current process
+    // calculateRangeBasedOnRankAndSize(size_online_random_array1, size, rank, &array1_start_range, &array1_end_range);
+
+    // // Calculate the range of elements for array 2 in the current process
+    // calculateRangeBasedOnArray(online_random_array1, online_random_array2, size_online_random_array2, array1_start_range, array1_end_range, &array2_start_range, &array2_end_range);
+
+    // // Flush all print statements before next section of code
+    // fflush(stdout);
+
+    // int *merged_array;
+    // int size_merged_array = (array1_end_range - array1_start_range) + (array2_end_range - array2_start_range) + 2;
+
+    // // Allocate memory for merged array
+    // merged_array = (int *)malloc(size_merged_array * sizeof(int));
+
+    // // Merge the two arrays together
+    // mergeTwoSortedArrays(online_random_array1, online_random_array2, array1_start_range, array1_end_range, array2_start_range, array2_end_range, merged_array);
 
     // ########## Testing with random online array ##########
 
