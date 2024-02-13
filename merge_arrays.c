@@ -4,7 +4,7 @@
 #include <time.h>
 #include <math.h>
 
-#define ARRAY_SIZE 10 // Adjust the size of the array as needed
+#define ARRAY_SIZE 10000 // Adjust the size of the array as needed
 #define RANDOM_NUMBER_MAX_SIZE ARRAY_SIZE * 100 // Max random number size that is put in the arrays
 
 void generateArray(int *array, int start, int end, int arraySize){
